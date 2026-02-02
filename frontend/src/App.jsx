@@ -51,22 +51,29 @@ const Login = () => {
 
 function Home() {
 
-  const [status, setStatus] =useState(false)
+  const [selected, setSelected] =useState([])
 
   const productArr = [
-    { "no": 1, "title": "iPhone", "price": "1,700,000", "state":status},
-    { "no": 2, "title": "Galaxy", "price": "1,700,000", "state":status},
-    { "no": 3, "title": "Pixel", "price": "1,700,000", "state":status},
+    { "no": 1, "title": "iPhone", "price": "1,700,000"},
+    { "no": 2, "title": "Galaxy", "price": "1,700,000"},
+    { "no": 3, "title": "Pixel", "price": "1,700,000"},
   ]
 
   const nav = useNavigate()
 
   const [cookies, setCookie, removeCookie] = useCookies(['jangbaguni']);
 
+  const check = (no)=>{
+    if(selected.includes(no)){
+      setSelected(selected.filter(n=> n !== no))
+    } else {
+      setSelected([...selected, no])
+    }
+  }
   const submitEvent = (e) => {
     e.preventDefault()
-    console.log(productArr[1].state)
-    setCookie('jangbaguni', v, { path: '/', maxAge: 24*60*60})
+    setCookie('jangbaguni', JSON.stringify(selected), { path: '/', maxAge: 24*60*60})
+    console.log(selected)
   }
 
 
@@ -129,8 +136,8 @@ function Home() {
                 className="text-bg-dark me-md-3 pt-3 px-3 text-center overflow-hidden"
               >
                 <div className="my-3 py-3">
-                  <input type="checkbox" name="product" id="1" value="아이폰" 
-                  onChange={()=>setStatus(!status)}/>
+                  <input type="checkbox" name="product" id={v.no} value="아이폰" 
+                  onChange={()=>{check(v.no)}}/>
                   <h2 className="display-5">{v.title}</h2>
                   <p className="lead">And an even wittier subheading.</p>
                 </div>
