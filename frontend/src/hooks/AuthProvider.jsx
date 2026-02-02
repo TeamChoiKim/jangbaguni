@@ -4,7 +4,9 @@ import { api } from '@utils/network.js'
 
 export const AuthContext = createContext()
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
+
+
   const [isLogin, setIsLogin] = useState(false)
   const navigate = useNavigate()
 
@@ -15,6 +17,7 @@ const AuthProvider = ({children}) => {
   }
 
   const clearAuth = () => {
+    api.post("/logout")
     localStorage.removeItem("user")
     setIsLogin(false)
     navigate("/")
@@ -29,7 +32,13 @@ const AuthProvider = ({children}) => {
   }
 
   useEffect(() => {
-    if(localStorage.getItem("user")) setIsLogin(true)
+    api.get('/me')
+    .then(res=>{
+      if(res.data.status){
+        setIsLogin(true)
+      }else setIsLogin(false)
+    })
+
   }, [])
 
   return (
